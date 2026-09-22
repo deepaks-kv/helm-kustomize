@@ -1,0 +1,23 @@
+name: order-service
+image:
+  repo: deepak/order-service
+port: 80
+config:
+  envs:
+    POSTGRES_DB: orders_db
+    POSTGRES_USERNAME: postgres
+    POSTGRES_HOST: db
+    PORT: "80"
+  secrets:
+    name: order-service-secret
+health:
+  path: /users/health
+http:
+  paths: [/orders]
+  hostnames:
+    - kvsandbox.local
+command: ["sh", "-c"]
+args: ["npm run start"]
+job:
+  type: migration
+  command: "npm run migrate"

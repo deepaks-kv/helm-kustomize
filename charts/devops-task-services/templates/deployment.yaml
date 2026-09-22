@@ -1,0 +1,70 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: {{ $.Values.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ $.Values.nameOverride }}
+    type: {{ $.Values.name }}
+spec:
+  replicas: {{ $.Values.replicaCount }}
+
+  selector:
+    matchLabels:
+      app: {{ $.Values.nameOverride }}
+      type: {{ $.Values.name }}
+
+  template:
+    metadata:
+      labels:
+        app: {{ $.Values.nameOverride }}
+        type: {{ $.Values.name }}
+
+    spec:
+      {{- if $.Values.job }}
+      serviceAccountName: {{ $.Values.name }}-job-watcher-sa
+      initContainers:
+        - name: wait-for-migrations
+          image: bitnami/kubectl:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Waiting for migration job {{ $.Values.name }}-{{ $.Values.job.type }}-job to complete..."
+              kubectl wait --for=condition=complete job/{{ $.Values.name }}-{{ $.Values.job.type }}-job --timeout=120s
+      {{- end }}
+      containers:
+        - name: {{ $.Values.name }}
+          image: {{ $.Values.image.repo }}:{{ $.Values.image.tag }}
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          command: {{- toYaml $.Values.command | nindent 12 }}
+          args: {{- toYaml $.Values.args | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: {{ $.Values.port }}
+              protocol: TCP
+
+          {{- if $.Values.config }}
+          envFrom:
+            {{- if $.Values.config.envs }}
+            - configMapRef:
+                name: {{ $.Values.name }}-config
+            {{- end }}
+            {{- if $.Values.config.secrets }}
+            - secretRef:
+                name: {{ $.Values.config.secrets.name }}
+            {{- end }}
+          {{- end }}
+
+          {{- with $.Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+          {{- with $.Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}

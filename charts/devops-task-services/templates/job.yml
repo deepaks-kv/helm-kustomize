@@ -1,0 +1,32 @@
+{{- if $.Values.job }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ $.Values.name }}-{{ $.Values.job.type }}-job"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    type: {{ $.Values.job.type }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ $.nameOverride }}
+        type: {{ $.Values.job.type }}
+    spec:
+      containers:
+        - name: {{ $.Values.name }}-job
+          image: {{ $.Values.image.repo }}:{{ $.Values.image.tag }}
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ $.Values.name }}-config
+            - secretRef:
+                name: {{ $.Values.name }}-secret
+          command:
+            - "/bin/sh"
+          args:
+            - "-c"
+            - "{{ $.Values.job.command }}"
+      restartPolicy: Never
+{{- end }}

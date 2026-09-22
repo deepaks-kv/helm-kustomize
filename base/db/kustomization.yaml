@@ -1,0 +1,4 @@
+resources:
+  - db-sts.yml
+  - db-vpa.yml
+  - db-svc.yml

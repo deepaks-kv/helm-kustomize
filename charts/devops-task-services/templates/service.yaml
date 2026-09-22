@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $.Values.name }}-svc
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ $.Values.nameOverride }}    
+    type: {{ $.Values.name }}
+spec:
+  type: {{ if $.Values.service }}{{ $.Values.service.type }}{{ else }}{{ $.Values.defaults.service.type }}{{ end }}
+  ports:
+    - port: {{ $.Values.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ $.Values.nameOverride }}    
+    type: {{ $.Values.name }}

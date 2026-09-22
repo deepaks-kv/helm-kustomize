@@ -1,0 +1,8 @@
+name: devops-ui
+image:
+  repo: deepak/devops-ui
+port: 80
+http:
+  paths: [/]
+  hostnames:
+    - kvsandbox.local
