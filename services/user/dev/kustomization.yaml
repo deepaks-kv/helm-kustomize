@@ -13,4 +13,4 @@ helmCharts:
 secretGenerator:
   - name: user-service-secret
     envs:
-      - users.env
+      - users.env.example

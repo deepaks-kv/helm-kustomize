@@ -13,4 +13,4 @@ helmCharts:
 secretGenerator:
   - name: order-service-secret
     envs:
-      - orders.env
+      - orders.env.example

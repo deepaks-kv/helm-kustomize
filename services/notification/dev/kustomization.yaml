@@ -13,4 +13,4 @@ helmCharts:
 secretGenerator:
   - name: notification-service-secret
     envs:
-      - notifications.env
+      - notifications.env.example
