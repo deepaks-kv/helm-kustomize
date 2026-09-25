@@ -1,16 +1,16 @@
 namespace: dev-ns
 
 helmGlobals:
-  chartHome: ../../../../charts
+  chartHome: ../../../charts
 
 helmCharts:
   - name: devops-task-services
     version: 0.1.0
     releaseName: order-service
-    valuesFile: ./configs/orders.yml
+    valuesFile: orders.yml
     namespace: dev-ns
 
 secretGenerator:
   - name: order-service-secret
     envs:
-      - ./secrets/orders.env
+      - orders.env

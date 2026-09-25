@@ -1,16 +1,16 @@
 namespace: dev-ns
 
 helmGlobals:
-  chartHome: ../../../../charts
+  chartHome: ../../../charts
 
 helmCharts:
   - name: devops-task-services
     version: 0.1.0
     releaseName: notification-service
-    valuesFile: ./configs/notifications.yml
+    valuesFile: notifications.yml
     namespace: dev-ns
 
 secretGenerator:
   - name: notification-service-secret
     envs:
-      - ./secrets/notifications.env
+      - notifications.env
