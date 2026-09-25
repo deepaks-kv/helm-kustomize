@@ -33,6 +33,9 @@ spec:
             requests:
               cpu: 200m
               memory: 145Mi
+            limits:
+              cpu: 300m
+              memory: 225Mi
 
   volumeClaimTemplates:
     - metadata:

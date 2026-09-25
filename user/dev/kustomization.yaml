@@ -1,0 +1,16 @@
+namespace: dev-ns
+
+helmGlobals:
+  chartHome: ../../../../charts
+
+helmCharts:
+  - name: devops-task-services
+    version: 0.1.0
+    releaseName: user-service
+    valuesFile: ./configs/users.yml
+    namespace: dev-ns
+
+secretGenerator:
+  - name: user-service-secret
+    envs:
+      - ./secrets/users.env

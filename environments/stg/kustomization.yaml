@@ -1,0 +1,46 @@
+resources:
+  - ../../base/
+  - ./namespace.yml
+
+namespace: stg-ns
+
+helmGlobals:
+  chartHome: ../../charts
+
+helmCharts:
+  - name: devops-task-services
+    version: 0.1.0
+    releaseName: user-service
+    valuesFile: ./configs/users.yml
+    namespace: stg-ns
+
+  - name: devops-task-services
+    version: 0.1.0
+    releaseName: order-service
+    namespace: stg-ns
+    valuesFile: ./configs/orders.yml
+
+  - name: devops-task-services
+    version: 0.1.0
+    releaseName: notification-service
+    namespace: stg-ns
+    valuesFile: ./configs/notification.yml
+
+  - name: devops-task-services
+    version: 0.1.0
+    releaseName: devops-ui
+    namespace: stg-ns
+    valuesFile: ./configs/ui.yml
+
+secretGenerator:
+  - name: user-service-secret
+    envs:
+      - ./secrets/users.env
+
+  - name: order-service-secret
+    envs:
+      - ./secrets/orders.env
+
+  - name: notification-service-secret
+    envs:
+      - ./secrets/notification.env

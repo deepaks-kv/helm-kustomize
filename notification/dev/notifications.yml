@@ -1,0 +1,26 @@
+name: notification-service
+image:
+  repo: deepak/notification-service
+port: 80
+config:
+  envs:
+    POSTGRES_DB: notifications_db
+    AWS_S3_BUCKET: deepak-org-notification-queue-bucket
+    AWS_S3_REGION: us-west-2
+    AWS_QUEUE_URL: https://sqs.us-west-2.amazonaws.com/402338187344/deepak-org-user-queue-sqsfd2d479b049991a50356cc7e29
+    POSTGRES_USERNAME: postgres
+    POSTGRES_HOST: db
+    PORT: "80"
+  secrets:
+    name: notification-service-secret
+health:
+  path: /notifications/health
+http:
+  paths: [/notifications]
+  hostnames:
+    - kvsandbox.local
+command: ["sh", "-c"]
+args: ["npm run start"]
+job:
+  type: migration
+  command: "npm run migrate"
